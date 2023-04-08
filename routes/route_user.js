@@ -1,13 +1,15 @@
 const express = require('express')
 const UserService = require('../service/service_user')
+const appValidator = require('../validator/validators').appValidator
 
 const userService = new UserService()
+
 const route = express()
 
 
-route.post('/if_user_exist', async (req, res) => {
+route.get('/if_user_exist', async (req, res) => {
     try {
-        const response = await userService.ifUserExist()
+        const response = await userService.ifUserExist(req.phone_number)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
@@ -45,6 +47,14 @@ route.post('/create_employee', async (req, res) => {
 route.put('/update_profile', async (req, res) => {
     try {
         const response = await userService.updateProfile()
+        res.status(response.status).json(response)
+    }
+    catch (err) { res.status(err.status).json(err) }
+})
+
+route.put('/update_password', async (req, res) => {
+    try {
+        const response = await userService.updatePassword()
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
