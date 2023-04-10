@@ -1,67 +1,73 @@
 const express = require('express')
 const UserService = require('../service/service_user')
 const appValidator = require('../validator/validators').appValidator
+const authoriser = require('../authorizer')
 
 const userService = new UserService()
 
 const route = express()
 
 
-route.get('/if_user_exist', async (req, res) => {
+route.post('/if_user_exist', appValidator.validatePhone, async (req, res) => {
     try {
-        const response = await userService.ifUserExist(req.phone_number)
-        res.status(response.status).json(response)
-    }
-    catch (err) { res.status(err.status).json(err) }
-})
-route.post('/login_user', async (req, res) => {
-    try {
-        const response = await userService.loginUser()
-        res.status(response.status).json(response)
-    }
-    catch (err) { res.status(err.status).json(err) }
-})
-route.get('/fetch_all_employes', async (req, res) => {
-    try {
-        const response = await userService.fetchAllEmployes()
+        const response = await userService.ifUserExist(req.body.phone_number)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
 })
 
-route.post('/create_user', async (req, res) => {
+route.post('/verify_phone_number', appValidator.validatePhoneVerification, async (req, res) => {
     try {
-        const response = await userService.createUser()
-        res.status(response.status).json(response)
-    }
-    catch (err) { res.status(err.status).json(err) }
-})
-route.post('/create_employee', async (req, res) => {
-    try {
-        const response = await userService.createEmployee()
+        const response = await userService.verifyPhoneNumber(req.body.phone_number,req.body.verification_code)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
 })
 
-route.put('/update_profile', async (req, res) => {
+route.post('/login_user', appValidator.validateLogin, async (req, res) => {
     try {
-        const response = await userService.updateProfile()
+        const response = await userService.loginUser(req.body.phone_number,req.body.password)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
 })
 
-route.put('/update_password', async (req, res) => {
+route.get('/fetch_all_employes', authoriser.authenticateToken, async (req, res) => {
     try {
-        const response = await userService.updatePassword()
+        const response = await userService.fetchAllEmployes(req.user.user_id)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }
 })
-route.delete('/delete_employee_profile', async (req, res) => {
+
+route.post('/create_employee',appValidator.validateUpdateUser,authoriser.authenticateToken, async (req, res) => {
     try {
-        const response = await userService.deleteEmployeeProfile()
+        const response = await userService.createEmployee(req.user.id, req.body)
+        res.status(response.status).json(response)
+    }
+    catch (err) { res.status(err.status).json(err) }
+})
+
+route.put('/update_profile',authoriser.authenticateToken,appValidator.validateUpdateUser, async (req, res) => {
+    try {
+        const response = await userService.updateProfile(req.user.id,req.body)
+        res.status(response.status).json(response)
+    }
+    catch (err) { res.status(err.status).json(err) }
+})
+
+route.put('/update_password', appValidator.validateUpdatePassword, authoriser.authenticateToken, async (req, res) => {
+    try {
+        const response = await userService.updatePassword(req.user.id, req.body.old_password,req.body.new_password)
+        res.status(response.status).json(response)
+    }
+    catch (err) { res.status(err.status).json(err) }
+})
+
+route.delete('/delete_employee_profile', authoriser.authenticateToken, async (req, res) => {
+    try {
+        console.log(req.user.id)
+        const response = await userService.deleteEmployeeProfile(req.user.id, req.body.employee_id)
         res.status(response.status).json(response)
     }
     catch (err) { res.status(err.status).json(err) }

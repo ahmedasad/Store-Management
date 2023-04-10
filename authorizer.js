@@ -8,7 +8,7 @@ module.exports = {
         }
         jwt.verify(authToken,process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
             if(err) return res.json({message:err.message})
-            else req.user = user
+            else req.user = user.u
             next()
          })
         
