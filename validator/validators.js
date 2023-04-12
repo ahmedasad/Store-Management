@@ -31,6 +31,28 @@ class AppValidator {
         next()
 
     }
+
+    // Store
+
+    createStore = function (req, res, next) {
+        const { error } = requestModels.createStore.validate(req.body)
+        if (error) return res.status(409).json({ status: 409, message: error.message })
+        next()
+
+    }
+    
+    updateStore = function (req, res, next) {
+        const { error } = requestModels.updateStore.validate(req.body)
+        if (error) return res.status(409).json({ status: 409, message: error.message })
+        next()
+
+    }
+    validateDeleteStore = function (req, res, next) {
+        const { error } = requestModels.deleteStore.validate(req.body)
+        if (error) return res.status(409).json({ status: 409, message: error.message })
+        next()
+
+    }
     
 }
 

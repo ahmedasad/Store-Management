@@ -1,6 +1,5 @@
 const dbConnection = require('../configs/db_config')
 const helper = require('../helper/helper')
-dbConnection.connection
 
 class UserRepo {
 
