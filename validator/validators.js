@@ -53,7 +53,19 @@ class AppValidator {
         next()
 
     }
-    
+
+    validateFetchStoreInventory = function (req, res, next) {
+        const { error } = requestModels.fetchStoreInvetory.validate(req.body)
+        if (error) return res.status(409).json({ status: 409, message: error.message })
+        next()
+    }
+
+    validateUpdateAndAddInvetory = function (req, res, next) {
+        const { error } = requestModels.addInvetory.validate(req.body)
+        if (error) return res.status(409).json({ status: 409, message: error.message })
+        next()
+    }
+
 }
 
 module.exports = {

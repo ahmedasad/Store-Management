@@ -43,5 +43,20 @@ module.exports = {
 
     deleteStore: Joi.object().keys({
         store_id: Joi.string().required(),
+    }),
+
+    // inventory
+    
+    fetchStoreInvetory: Joi.object().keys({
+        store_id: Joi.string().required()
+    }),
+    
+    updateAndAddInvetory: Joi.object().keys({
+        items: Joi.array({
+            product_id:Joi.string().allow(null),
+            product_name: Joi.string().required(),
+            store_id: Joi.string().required(),
+            quantity: Joi.number().required()
+        }).required()
     })
 }
