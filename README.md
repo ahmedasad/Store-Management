@@ -9,7 +9,7 @@
   * User can create/manage **Store**
   * User can create/manage **Inventory**
 
-#### The app is created in three layers **Division** (Route-Service-Repo)
+<b>Monolithic Archhitecture</b> followed to create app (Route-Service-Repo)
    - <kbd> <br> Node JS <br> </kbd> and <kbd> <br> Express JS <br> </kbd> primarily used for app devlopment <br>
    - <kbd> <br> JSONWebtoken <br> </kbd> for authentication/authorization <br>
    - <kbd> <br> JOI <br> </kbd> used for validations <br>
